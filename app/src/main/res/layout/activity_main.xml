@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -7,137 +6,106 @@
     android:layout_height="wrap_content"
     tools:context=".MainActivity"
     android:id="@+id/main"
-    android:background="#E8E8E8"
-    >
+    android:background="#E8E8E8">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:padding="16dp">
 
+        <!-- App Logo -->
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_gravity="center"
-            android:layout_marginVertical="20dp">
+            android:gravity="center">
+
+            <ImageView
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:src="@drawable/translateLight"
+                android:contentDescription="@string/app_icon" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/app_name"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:textAlignment="center"
-                android:layout_gravity="center"
-                android:textAllCaps="true"
-                android:textSize="20sp"
-
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <ImageView
-                android:layout_width="30dp"
-                android:layout_height="wrap_content"
-                android:src="@drawable/translateLight"
-                android:contentDescription="@string/app_icon" />
-
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:layout_marginStart="12dp"/>
         </LinearLayout>
 
+        <!-- Language Selection -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginHorizontal="8dp"
-            android:layout_marginTop="4dp"
-            android:background="#A5C4F3">
+            android:layout_marginTop="16dp">
 
-
+            <!-- From Language Spinner -->
             <Spinner
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:id="@+id/fromLanguageSpinner"
-                android:layout_margin="3dp"
-                android:padding="2dp"
-                android:layout_gravity="center"
-                />
+                android:layout_marginEnd="8dp" />
 
+            <!-- Translate Icon -->
             <ImageView
-                android:layout_width="30dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_gravity="center"
                 android:src="@drawable/translateLight"
-                android:contentDescription="@string/app_icon" />
+                android:contentDescription="@string/arrows_icon"
+                android:layout_marginEnd="8dp"/>
 
+            <!-- To Language Spinner -->
             <Spinner
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:id="@+id/toLanguageSpinner"
-                android:layout_margin="3dp"
-                android:padding="2dp"
-                android:layout_gravity="center" />
-            
+                />
         </LinearLayout>
 
+        <!-- Microphone Icon -->
         <ImageView
             android:layout_width="30dp"
-            android:layout_height="40dp"
-            android:layout_gravity="center"
-            android:layout_marginTop="10dp"
+            android:layout_height="30dp"
             android:src="@drawable/microphone"
-            android:contentDescription="@string/app_icon" />
+            android:contentDescription="@string/microphone_icon"
+            android:layout_gravity="center"
+            android:layout_marginTop="16dp"/>
 
+        <!-- Text Input Field -->
+
+
+        <!-- Down Arrow Icon -->
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="200dp"
+            android:layout_marginTop="16dp"
             android:hint="@string/input_hit"
-            android:layout_marginHorizontal="8dp"
-            android:ems="10"
-            android:importantForAutofill="no"
-            android:padding="4dp"
-            android:gravity="top"
-            android:inputType="textImeMultiLine|textMultiLine"
-            android:textColor="@color/black"
-            android:background="#FFFFFF"
-            android:layout_marginVertical="8dp">
-
-
-        </com.google.android.material.textfield.TextInputEditText>
-
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Translate Text"
-            android:layout_marginHorizontal="8dp"
-            android:layout_gravity="center"
-            android:textColor="@color/black"
-            android:backgroundTint="#A5C4F3"
-            />
+            android:inputType="textMultiLine|textCapSentences"
+            android:maxLines="5" />
 
         <ImageView
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:layout_gravity="center"
             android:src="@drawable/arrowDown"
-            android:contentDescription="@string/app_icon" />
+            android:contentDescription="@string/down_arrow_icon"
+            android:layout_gravity="center"
+            android:layout_marginTop="16dp"/>
 
-
-
+        <!-- Translated Text Display -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="200dp"
-            android:padding="4dp"
             android:text="@string/translated_text"
-            android:layout_marginHorizontal="8dp"
-            android:layout_marginTop="8dp"
-            android:id="@+id/translatedText"
+            android:textSize="18sp"
             android:textColor="@color/black"
-            android:background="#FFFFFF"
-            android:layout_marginVertical="8dp"/>
+            android:layout_marginTop="16dp"/>
 
     </LinearLayout>
-
 </ScrollView>
