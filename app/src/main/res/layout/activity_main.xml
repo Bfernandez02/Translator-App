@@ -128,7 +128,7 @@
             android:padding="16dp"
             android:gravity="top"
             android:layout_height="200dp"
-            android:layout_marginTop="6dp"
+            android:layout_marginTop="10dp"
             android:hint="@string/input_hit"
             android:inputType="textMultiLine|textCapSentences"
             android:maxLines="5"
@@ -191,10 +191,10 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="200dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/back"
             android:padding="16dp"
             android:text="@string/translated_text"
-            android:background="@drawable/back"
             android:textColor="@color/black"
             android:textSize="18sp" />
 
