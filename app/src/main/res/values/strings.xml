@@ -6,4 +6,11 @@
     <string name="microphone_icon">microphone icon\n</string>
     <string name="arrows_icon">switch arrows icon</string>
     <string name="down_arrow_icon">down arrow</string>
+    <string name="listen">listen</string>
+    <string name="speak">Speak</string>
+    <string name="spanish">Spanish</string>
+    <string name="english">English</string>
+    <string name="favourites">Favourites</string>
+    <string name="recent">Recent</string>
+    <string name="settings">Settings</string>
 </resources>
