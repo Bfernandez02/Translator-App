@@ -3,4 +3,7 @@
     <string name="app_icon">app_icon</string>
     <string name="input_hit">Enter the text you would like to translate here</string>
     <string name="translated_text">Translated Text</string>
+    <string name="microphone_icon">microphone icon\n</string>
+    <string name="arrows_icon">switch arrows icon</string>
+    <string name="down_arrow_icon">down arrow</string>
 </resources>
