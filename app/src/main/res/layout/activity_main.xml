@@ -29,7 +29,7 @@
             <ImageView
                 android:layout_width="48dp"
                 android:layout_height="48dp"
-                android:src="@drawable/translateLight"
+                android:src="@drawable/translate_light"
                 android:contentDescription="@string/app_icon" />
 
             <TextView
@@ -132,15 +132,17 @@
             android:hint="@string/input_hit"
             android:inputType="textMultiLine|textCapSentences"
             android:maxLines="5"
-            android:background="@drawable/back"/>
+            android:background="@drawable/back"
+            android:id="@+id/inputField"/>
 
-        <ImageView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:src="@drawable/arrowDown"
-            android:contentDescription="@string/down_arrow_icon"
-            android:layout_gravity="center"
-            android:layout_marginTop="16dp"/>
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="TRANSLATE"
+            android:id="@+id/btnTranslate"
+            android:backgroundTint="@color/black"
+            android:layout_marginTop="5dp">
+        </Button>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -196,7 +198,8 @@
             android:text="@string/translated_text"
             android:background="@drawable/back"
             android:textColor="@color/black"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            android:id="@+id/outputField"/>
 
 
     </LinearLayout>
