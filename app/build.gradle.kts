@@ -5,7 +5,9 @@ plugins {
 android {
     namespace = "bf22wk.brocku.translatorapp"
     compileSdk = 34
-
+    packagingOptions {
+        resources.excludes.add("META-INF/*")
+    }
     defaultConfig {
         applicationId = "bf22wk.brocku.translatorapp"
         minSdk = 23

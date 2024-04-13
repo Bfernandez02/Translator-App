@@ -87,7 +87,8 @@
                 android:textSize="16sp"
                 android:textColor="@color/black"
                 android:layout_marginTop="16dp"
-                android:layout_marginHorizontal="10dp"/>
+                android:layout_marginHorizontal="10dp"
+                android:id="@+id/fromLanguageText"/>
 
             <Space
                 android:layout_width="0dp"
@@ -155,7 +156,8 @@
                 android:text="@string/spanish"
                 android:textSize="16sp"
                 android:textColor="@color/black"
-                android:layout_marginTop="16dp"/>
+                android:layout_marginTop="16dp"
+                android:id="@+id/toLanguageText"/>
 
             <Space
                 android:layout_width="0dp"
