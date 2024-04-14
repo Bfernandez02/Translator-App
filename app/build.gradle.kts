@@ -5,7 +5,9 @@ plugins {
 android {
     namespace = "bf22wk.brocku.translatorapp"
     compileSdk = 34
-
+    packagingOptions {
+        resources.excludes.add("META-INF/*")
+    }
     defaultConfig {
         applicationId = "bf22wk.brocku.translatorapp"
         minSdk = 23
@@ -37,4 +39,5 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
+    implementation("com.google.cloud:google-cloud-translate:2.6.0")
 }
