@@ -1,5 +1,6 @@
 package bf22wk.brocku.translatorapp;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
@@ -47,6 +48,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+
+    Context context;
     Translate _translate = TranslateOptions.newBuilder().setApiKey("AIzaSyAmjYp_KwOm9-gLDSGKUCmJ_xLraz6te8k").build().getService();
     Button _translateButton;
     TextInputEditText _inputField; //input box
@@ -56,10 +59,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     String _fromLanguageCode, _toLanguageCode; //example, EN
     ArrayList<LanguageMapper> _lM = new ArrayList<LanguageMapper>();
 
+    List<translate> recentList = new ArrayList<>();
+
+    ArrayList<translate> favouriteList = new ArrayList<>();
+
+    String fromLanguageName;
+
+    DataHelper db;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        context = this;
+        db = new DataHelper(context);
+
         setContentView(R.layout.activity_main);
         _translateButton = findViewById(R.id.btnTranslate);
         _inputField = findViewById(R.id.inputField);
@@ -95,12 +110,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             public void onNothingSelected(AdapterView<?> parentView) {}
 
         });
+
+
     }
 
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.btnTranslate) {
+
             OnTranslationButtonPressed();
+            SaveRecent();
+            showRecent();
         }
     }
 
@@ -162,6 +182,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         return _inputField.getText().toString();
     }
 
+
+    private  String GetOutputText(){
+        return _outputField.getText().toString();
+    }
     private void SetOutputText(String s){
         _outputField.setText(s); //set the text to the parameter value
     }
@@ -170,6 +194,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private String TranslateText(String text, String targetLanguage) {
         Detection detection = _translate.detect(text);
         String detectionLanguage = detection.getLanguage();
+        fromLanguageName = detection.getLanguage().toString();
+        _fromLanguageCode = FindLanguageCode(fromLanguageName);
+
         Translation translation = _translate.translate(
                 text,
                 TranslateOption.sourceLanguage(detectionLanguage),
@@ -215,4 +242,40 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (_fromLanguageSpinner.getSelectedItemId() == 0) return true;
         return false; //otherwise return false
     }
+
+    public void SaveFavourite() {
+
+        if ( IsDetectLanguageSelected()){
+            db.insertFAVOURITE("Detect",_toLanguageCode,GetInputText(),GetOutputText());
+            translate t  = new translate("Detect",_toLanguageCode,GetInputText(),GetOutputText());
+
+        }else{
+            db.insertFAVOURITE(_fromLanguageCode,_toLanguageCode,GetInputText(),GetOutputText());
+            translate t  = new translate(_fromLanguageCode,_toLanguageCode,GetInputText(),GetOutputText());
+        }
+
+    }
+
+    public void showRecent(){
+        for( translate t : recentList){
+            System.out.println(t.getFrom_language());
+            System.out.println(t.getText());
+            System.out.println(t.getTo_language());
+            System.out.println(t.getTranslated_text());
+        }
+    }
+    public void SaveRecent(){
+        if ( IsDetectLanguageSelected()){
+            db.insertRECENT("Detect",_toLanguageCode,GetInputText(),GetOutputText());
+            recentList = db.FetchRecent();
+
+
+        }else{
+            db.insertRECENT(_fromLanguageCode,_toLanguageCode,GetInputText(),GetOutputText());
+            recentList = db.FetchRecent();
+        }
+
+    }
 }
+
+
