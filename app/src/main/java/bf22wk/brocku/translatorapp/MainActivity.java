@@ -1,8 +1,11 @@
 package bf22wk.brocku.translatorapp;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.method.ScrollingMovementMethod;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -10,6 +13,8 @@ import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.navigation.NavigationBarView;
@@ -48,6 +53,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    // This is used so that code can be run after the required action occur in requested activity
+    public ActivityResultLauncher<Intent> mStartForResult = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == Activity.RESULT_OK) {
+                    Intent intent = result.getData();
+                    fetchTranslations();
+                }
+            });
+
 
     Context context;
     Translate _translate = TranslateOptions.newBuilder().setApiKey("AIzaSyAmjYp_KwOm9-gLDSGKUCmJ_xLraz6te8k").build().getService();
@@ -59,11 +74,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     String _fromLanguageCode, _toLanguageCode; //example, EN
     ArrayList<LanguageMapper> _lM = new ArrayList<LanguageMapper>();
 
-    List<translate> recentList = new ArrayList<>();
+    public static List<translate> recentList = new ArrayList<>();
 
-    ArrayList<translate> favouriteList = new ArrayList<>();
+    public static List<translate> favouriteList = new ArrayList<>();
 
     String fromLanguageName;
+    ArrayAdapter<String> fromLanguageSpinnerAdapter;
+    ArrayAdapter<String> toLanguageSpinnerAdapter;
 
     DataHelper db;
 
@@ -74,6 +91,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         context = this;
         db = new DataHelper(context);
+        fetchTranslations();
+
 
         setContentView(R.layout.activity_main);
         _translateButton = findViewById(R.id.btnTranslate);
@@ -84,6 +103,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         _fromLanguageText = findViewById(R.id.fromLanguageText);
         _toLanguageText = findViewById(R.id.toLanguageText);
         _translateButton.setOnClickListener(this); // Set OnClickListener for the translate button
+        _outputField.setMovementMethod(new ScrollingMovementMethod());
 
         new LoadLanguagesTask().execute(); //load languages into spinner
 
@@ -119,8 +139,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (v.getId() == R.id.btnTranslate) {
 
             OnTranslationButtonPressed();
-            SaveRecent();
-            showRecent();
         }
     }
 
@@ -145,6 +163,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         @Override
         protected void onPostExecute(String result) {
             SetOutputText(result);
+            SaveRecent();
         }
     }
 
@@ -168,12 +187,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             ArrayAdapter<String> adapter = new ArrayAdapter<>(MainActivity.this, android.R.layout.simple_spinner_item, result);
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             _fromLanguageSpinner.setAdapter(adapter);
+            fromLanguageSpinnerAdapter = adapter;
 
             //populate to language spinner with supported languages (excluding "Detect")
             List<String> toLanguageNames = new ArrayList<>(result);
             toLanguageNames.remove("Detect");
             ArrayAdapter<String> toLanguageAdapter = new ArrayAdapter<>(MainActivity.this, android.R.layout.simple_spinner_item, toLanguageNames);
             toLanguageAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            toLanguageSpinnerAdapter = toLanguageAdapter;
             _toLanguageSpinner.setAdapter(toLanguageAdapter);
         }
     }
@@ -223,6 +244,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         _fromLanguageCode = FindLanguageCode(languageText);
     }
 
+
     private void UpdateToLanguage(){
         String languageText = _toLanguageSpinner.getSelectedItem().toString();
         _toLanguageText.setText(languageText.toString());
@@ -244,14 +266,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public void SaveFavourite() {
+        String toLanguage = _toLanguageSpinner.getSelectedItem().toString();
 
         if ( IsDetectLanguageSelected()){
-            db.insertFAVOURITE("Detect",_toLanguageCode,GetInputText(),GetOutputText());
-            translate t  = new translate("Detect",_toLanguageCode,GetInputText(),GetOutputText());
+            db.insertFAVOURITE("Detect",toLanguage,GetInputText(),GetOutputText());
+            translate t  = new translate("Detect",toLanguage,GetInputText(),GetOutputText());
 
         }else{
-            db.insertFAVOURITE(_fromLanguageCode,_toLanguageCode,GetInputText(),GetOutputText());
-            translate t  = new translate(_fromLanguageCode,_toLanguageCode,GetInputText(),GetOutputText());
+            db.insertFAVOURITE(_fromLanguageCode,toLanguage,GetInputText(),GetOutputText());
+            translate t  = new translate(_fromLanguageCode,toLanguage,GetInputText(),GetOutputText());
         }
 
     }
@@ -265,16 +288,53 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
     public void SaveRecent(){
+
+        String test = GetOutputText();
+
+        String toLanguage = _toLanguageSpinner.getSelectedItem().toString();
         if ( IsDetectLanguageSelected()){
-            db.insertRECENT("Detect",_toLanguageCode,GetInputText(),GetOutputText());
+            db.insertRECENT("Detect",toLanguage,GetInputText(),GetOutputText());
             recentList = db.FetchRecent();
 
 
         }else{
-            db.insertRECENT(_fromLanguageCode,_toLanguageCode,GetInputText(),GetOutputText());
+            db.insertRECENT(_fromLanguageCode,toLanguage,GetInputText(),GetOutputText());
             recentList = db.FetchRecent();
         }
+    }
 
+    public void fetchTranslations(){
+        recentList = db.FetchRecent();
+        favouriteList = db.FetchFavourite();
+    }
+
+    public void handleSettingsClick(View view) {
+//        mStartForResult.launch(new Intent(this, Settings.class));
+    }
+
+    public void handleRecentClick(View view) {
+        mStartForResult.launch(new Intent(this, Recents.class));
+    }
+
+    public void handleFavouritesClick(View view) {
+        mStartForResult.launch(new Intent(this, Favourites.class));
+    }
+
+
+    public void handleLanguageSwitch(View view) {
+        String fromLanguage = _fromLanguageSpinner.getSelectedItem().toString();
+
+        if (fromLanguage.equals("Detect")){
+            return;
+        }
+        String toLanguage = _toLanguageSpinner.getSelectedItem().toString();
+
+
+        _fromLanguageText.setText(fromLanguage);
+        _toLanguageText.setText(toLanguage);
+
+        _fromLanguageSpinner.setSelection(fromLanguageSpinnerAdapter.getPosition(toLanguage));
+        _toLanguageSpinner.setSelection(toLanguageSpinnerAdapter.getPosition(fromLanguage));
     }
 }
 
