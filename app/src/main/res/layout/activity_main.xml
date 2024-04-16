@@ -116,7 +116,10 @@
                     android:src="@drawable/microphone"
                     android:contentDescription="@string/microphone_icon"
                     android:layout_marginTop="16dp"
-                    android:layout_marginStart="4dp"/>
+                    android:layout_marginStart="4dp"
+                    android:id="@+id/btnMic"
+                    android:clickable="true"
+                    android:focusable="true"/>
 
             </LinearLayout>
 
@@ -185,7 +188,10 @@
                     android:src="@drawable/speaker"
                     android:contentDescription="@string/microphone_icon"
                     android:layout_marginTop="16dp"
-                    android:layout_marginStart="4dp"/>
+                    android:layout_marginStart="4dp"
+                    android:id="@+id/btnSpeaker"
+                    android:clickable="true"
+                    android:focusable="true"/>/>
 
             </LinearLayout>
 

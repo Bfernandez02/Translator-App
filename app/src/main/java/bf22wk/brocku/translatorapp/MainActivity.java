@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -30,6 +31,13 @@ import com.google.cloud.translate.Translate.TranslateOption;
 import java.sql.Array;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+
+import android.content.Intent;
+import android.speech.RecognizerIntent;
+
+import android.speech.tts.TextToSpeech;
+import android.speech.tts.UtteranceProgressListener;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -64,8 +72,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             });
 
 
+    private static final int SPEECH_REQUEST_CODE = 100;
     Context context;
     Translate _translate = TranslateOptions.newBuilder().setApiKey("AIzaSyAmjYp_KwOm9-gLDSGKUCmJ_xLraz6te8k").build().getService();
+    ImageView _micButton, _speakerButton;
     Button _translateButton;
     TextInputEditText _inputField; //input box
     TextView _outputField; //output box
@@ -73,6 +83,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     TextView _fromLanguageText, _toLanguageText; //the text above each language box
     String _fromLanguageCode, _toLanguageCode; //example, EN
     ArrayList<LanguageMapper> _lM = new ArrayList<LanguageMapper>();
+    private TextToSpeech _tts; //the text to speech object
 
     public static List<translate> recentList = new ArrayList<>();
 
@@ -93,7 +104,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         db = new DataHelper(context);
         fetchTranslations();
 
-
         setContentView(R.layout.activity_main);
         _translateButton = findViewById(R.id.btnTranslate);
         _inputField = findViewById(R.id.inputField);
@@ -102,10 +112,27 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         _toLanguageSpinner = findViewById(R.id.toLanguageSpinner);
         _fromLanguageText = findViewById(R.id.fromLanguageText);
         _toLanguageText = findViewById(R.id.toLanguageText);
+        _micButton = findViewById(R.id.btnMic);
+        _speakerButton = findViewById(R.id.btnSpeaker);
         _translateButton.setOnClickListener(this); // Set OnClickListener for the translate button
+        _micButton.setOnClickListener(this);
+        _speakerButton.setOnClickListener(this);
         _outputField.setMovementMethod(new ScrollingMovementMethod());
 
         new LoadLanguagesTask().execute(); //load languages into spinner
+
+        _tts = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int status) {
+                //if initialization succeeded
+                if (status == TextToSpeech.SUCCESS){
+                    _tts.setLanguage(Locale.CANADA);
+                }
+                else{
+
+                }
+            }
+        });
 
         //listener for from language spinner
         _fromLanguageSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -130,16 +157,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             public void onNothingSelected(AdapterView<?> parentView) {}
 
         });
-
-
     }
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.btnTranslate) {
-
-            OnTranslationButtonPressed();
-        }
+        if (v.getId() == R.id.btnTranslate) OnTranslationButtonPressed();
+        if (v.getId() == R.id.btnMic) OnMicButtonPressed();
+        if (v.getId() == R.id.btnSpeaker) OnSpeakerButtonPressed();
     }
 
     private void OnTranslationButtonPressed(){
@@ -336,6 +360,49 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         _fromLanguageSpinner.setSelection(fromLanguageSpinnerAdapter.getPosition(toLanguage));
         _toLanguageSpinner.setSelection(toLanguageSpinnerAdapter.getPosition(fromLanguage));
     }
+
+    //when the mic button is pressed
+    private void OnMicButtonPressed(){
+        //create an intent for speech-to-text recognition
+        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+
+        //start the Speech-to-Text recognition activity
+        startActivityForResult(intent, SPEECH_REQUEST_CODE);
+    }
+
+    //when the speaker button is pressed
+    private void OnSpeakerButtonPressed(){
+        String text = _outputField.getText().toString(); //get the text from output field
+        //if TTS is initialized (and text isnt empty)
+        if (_tts != null && !text.isEmpty()) _tts.speak(text, TextToSpeech.QUEUE_FLUSH, null);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        //stop TTS when leaving page
+        if (_tts != null){
+            _tts.stop();
+            _tts.shutdown();
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        //if the activity is speech to text (and processed properly)
+        if (requestCode == SPEECH_REQUEST_CODE && resultCode == RESULT_OK) {
+            //retrieve the recognized speech
+            ArrayList<String> results = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+            if (results != null && !results.isEmpty()) {
+                //get the first result and set it to the input field
+                String spokenText = results.get(0);
+                _inputField.setText(spokenText);
+            }
+        }
+    }
 }
+
 
 

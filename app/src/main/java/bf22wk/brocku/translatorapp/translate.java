@@ -11,8 +11,8 @@ public class translate {
     public translate(String from, String to , String text, String translated){
         this.from_language = from;
         this.to_language = to;
-        this.text =text;
-        this.translated_text =translated;
+        this.text = text;
+        this.translated_text = translated;
     }
 
 
