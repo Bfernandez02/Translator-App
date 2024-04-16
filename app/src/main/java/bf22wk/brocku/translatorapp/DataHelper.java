@@ -56,6 +56,11 @@ public class DataHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
+    public void removeAllRecents() {
+        SQLiteDatabase db =this.getWritableDatabase();
+        db.delete(TABLE_RECENT, null, null);
+    }
+
     public void insertRECENT(String source, String target, String text, String translated_text){
 
         SQLiteDatabase db =this.getWritableDatabase();
