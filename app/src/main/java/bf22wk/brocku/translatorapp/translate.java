@@ -7,6 +7,7 @@ public class translate {
 
     String text;
     String translated_text;
+    int ID;
 
     public translate(String from, String to , String text, String translated){
         this.from_language = from;
@@ -22,6 +23,13 @@ public class translate {
 
     public String getText() {
         return text;
+    }
+
+    public void setID(int id){
+        this.ID = id;
+    }
+    public int getID() {
+        return ID;
     }
 
     public String getTo_language() {

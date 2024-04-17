@@ -68,6 +68,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 if (result.getResultCode() == Activity.RESULT_OK) {
                     Intent intent = result.getData();
                     fetchTranslations();
+                    handleTranslationListElementClick();
+                    selectedTranslation = null;
                 }
             });
 
@@ -89,6 +91,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     public static List<translate> favouriteList = new ArrayList<>();
 
+    public static Boolean recents;
+
+    public static translate selectedTranslation;
     String fromLanguageName;
     ArrayAdapter<String> fromLanguageSpinnerAdapter;
     ArrayAdapter<String> toLanguageSpinnerAdapter;
@@ -104,6 +109,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         db = new DataHelper(context);
         fetchTranslations();
 
+//        db.removeAllRecents();
+//        db.removeAllFavourites();
+
         setContentView(R.layout.activity_main);
         _translateButton = findViewById(R.id.btnTranslate);
         _inputField = findViewById(R.id.inputField);
@@ -118,6 +126,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         _micButton.setOnClickListener(this);
         _speakerButton.setOnClickListener(this);
         _outputField.setMovementMethod(new ScrollingMovementMethod());
+        recents = false;
 
         new LoadLanguagesTask().execute(); //load languages into spinner
 
@@ -289,31 +298,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         return false; //otherwise return false
     }
 
-    public void SaveFavourite() {
-        String toLanguage = _toLanguageSpinner.getSelectedItem().toString();
-
-        if ( IsDetectLanguageSelected()){
-            db.insertFAVOURITE("Detect",toLanguage,GetInputText(),GetOutputText());
-            translate t  = new translate("Detect",toLanguage,GetInputText(),GetOutputText());
-
-        }else{
-            db.insertFAVOURITE(_fromLanguageCode,toLanguage,GetInputText(),GetOutputText());
-            translate t  = new translate(_fromLanguageCode,toLanguage,GetInputText(),GetOutputText());
-        }
-
-    }
-
-    public void showRecent(){
-        for( translate t : recentList){
-            System.out.println(t.getFrom_language());
-            System.out.println(t.getText());
-            System.out.println(t.getTo_language());
-            System.out.println(t.getTranslated_text());
-        }
-    }
     public void SaveRecent(){
-
-        String test = GetOutputText();
 
         String toLanguage = _toLanguageSpinner.getSelectedItem().toString();
         if ( IsDetectLanguageSelected()){
@@ -359,6 +344,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         _fromLanguageSpinner.setSelection(fromLanguageSpinnerAdapter.getPosition(toLanguage));
         _toLanguageSpinner.setSelection(toLanguageSpinnerAdapter.getPosition(fromLanguage));
+    }
+
+    public void handleTranslationListElementClick(){
+
+        String toLanguage = selectedTranslation.getTo_language();
+        String fromLanguage = selectedTranslation.getFrom_language();
+
+        _fromLanguageText.setText(fromLanguage);
+        _toLanguageText.setText(toLanguage);
+        _fromLanguageSpinner.setSelection(fromLanguageSpinnerAdapter.getPosition(fromLanguage));
+        _toLanguageSpinner.setSelection(toLanguageSpinnerAdapter.getPosition(toLanguage));
+        _inputField.setText(selectedTranslation.getText());
+        _outputField.setText(selectedTranslation.getTranslated_text());
     }
 
     //when the mic button is pressed

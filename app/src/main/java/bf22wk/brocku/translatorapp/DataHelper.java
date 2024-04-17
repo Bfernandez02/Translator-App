@@ -56,11 +56,6 @@ public class DataHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public void removeAllRecents() {
-        SQLiteDatabase db =this.getWritableDatabase();
-        db.delete(TABLE_RECENT, null, null);
-    }
-
     public void insertRECENT(String source, String target, String text, String translated_text){
 
         SQLiteDatabase db =this.getWritableDatabase();
@@ -99,6 +94,7 @@ public class DataHelper extends SQLiteOpenHelper {
         try {
             if(cursor.moveToFirst())
                 do {
+                    int idIndex = cursor.getColumnIndex(ID);
                     @SuppressLint("Range") translate t = new translate(
                             cursor.getString(cursor.getColumnIndex(SOURCE_LANGUAGE)),
                             cursor.getString(cursor.getColumnIndex(TARGET_LANGUAGE)),
@@ -106,6 +102,7 @@ public class DataHelper extends SQLiteOpenHelper {
                             cursor.getString(cursor.getColumnIndex(TRANSLATED_TEXT))
 
                     );
+                    t.setID(idIndex);
                     list.add(t);
             } while (cursor.moveToNext());
         } finally {
@@ -124,6 +121,7 @@ public class DataHelper extends SQLiteOpenHelper {
         try {
             if(cursor.moveToFirst())
                 do {
+                    int idIndex = cursor.getColumnIndex(ID);
                     @SuppressLint("Range") translate t = new translate(
                             cursor.getString(cursor.getColumnIndex(SOURCE_LANGUAGE)),
                             cursor.getString(cursor.getColumnIndex(TARGET_LANGUAGE)),
@@ -131,6 +129,8 @@ public class DataHelper extends SQLiteOpenHelper {
                             cursor.getString(cursor.getColumnIndex(TRANSLATED_TEXT))
 
                     );
+
+                    t.setID(idIndex);
                     list.add(t);
                 } while (cursor.moveToNext());
         } finally {
@@ -138,6 +138,26 @@ public class DataHelper extends SQLiteOpenHelper {
         }
 
         return list;
+    }
+
+    public void RemoveRecent(translate translation) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        db.delete(TABLE_RECENT, ID + "=?", new String[]{String.valueOf(translation.getID())});
+    }
+
+    public void RemoveFavourite(translate translation) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        db.delete(TABLE_FAVOURITE, ID + "=?", new String[]{String.valueOf(translation.getID())});
+    }
+
+    public void removeAllRecents() {
+        SQLiteDatabase db =this.getWritableDatabase();
+        db.delete(TABLE_RECENT, null, null);
+    }
+
+    public void removeAllFavourites() {
+        SQLiteDatabase db =this.getWritableDatabase();
+        db.delete(TABLE_FAVOURITE, null, null);
     }
 }
 

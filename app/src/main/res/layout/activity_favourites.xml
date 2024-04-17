@@ -34,10 +34,11 @@
 
     </LinearLayout>
 
-    <ListView
+    <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
+        android:id="@+id/favouritesLV"
         android:background="@color/backgroundPrimary"
         android:padding="18dp"
         tools:listitem="@layout/translation_cell"
@@ -59,6 +60,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
+            android:id="@+id/favouritesBTN"
             android:layout_marginHorizontal="10dp">
 
             <ImageView
@@ -90,7 +92,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_marginHorizontal="10dp">
+            android:layout_marginHorizontal="10dp"
+            android:id="@+id/recentBTN"
+            android:onClick="handleRecentClick">
 
             <ImageView
                 android:layout_width="30dp"
@@ -121,7 +125,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_marginHorizontal="10dp">
+            android:layout_marginHorizontal="10dp"
+            android:id="@+id/settingsBTN"
+            android:onClick="handleSettingsClick">
 
             <ImageView
                 android:layout_width="30dp"
@@ -140,6 +146,7 @@
                 android:textColor="@color/white"
                 android:layout_marginTop="2dp"
                 android:layout_marginBottom="10dp"/>
+
         </LinearLayout>
 
         <Space
