@@ -95,6 +95,8 @@ public class DataHelper extends SQLiteOpenHelper {
             if(cursor.moveToFirst())
                 do {
                     int idIndex = cursor.getColumnIndex(ID);
+                    int id = cursor.getInt(idIndex);
+
                     @SuppressLint("Range") translate t = new translate(
                             cursor.getString(cursor.getColumnIndex(SOURCE_LANGUAGE)),
                             cursor.getString(cursor.getColumnIndex(TARGET_LANGUAGE)),
@@ -102,7 +104,7 @@ public class DataHelper extends SQLiteOpenHelper {
                             cursor.getString(cursor.getColumnIndex(TRANSLATED_TEXT))
 
                     );
-                    t.setID(idIndex);
+                    t.setID(id);
                     list.add(t);
             } while (cursor.moveToNext());
         } finally {
@@ -148,6 +150,12 @@ public class DataHelper extends SQLiteOpenHelper {
     public void RemoveFavourite(translate translation) {
         SQLiteDatabase db = this.getReadableDatabase();
         db.delete(TABLE_FAVOURITE, ID + "=?", new String[]{String.valueOf(translation.getID())});
+    }
+
+    public void ClearAll() {
+        SQLiteDatabase db =this.getWritableDatabase();
+        db.delete(TABLE_FAVOURITE, null, null);
+        db.delete(TABLE_RECENT, null, null);
     }
 
     public void removeAllRecents() {

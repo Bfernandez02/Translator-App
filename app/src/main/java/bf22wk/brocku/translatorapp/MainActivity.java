@@ -65,11 +65,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public ActivityResultLauncher<Intent> mStartForResult = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
+                View v=findViewById(R.id.favouritesLV);
                 if (result.getResultCode() == Activity.RESULT_OK) {
                     Intent intent = result.getData();
                     fetchTranslations();
                     handleTranslationListElementClick();
                     selectedTranslation = null;
+                }
+                else if (result.getResultCode() == 1){
+                    handleFavouritesClick(v);
+                }
+                else if (result.getResultCode() == 2){
+                    handleRecentClick(v);
+                }
+                else if (result.getResultCode() == 3){
+                    handleFavouritesClick(v);
                 }
             });
 
@@ -109,8 +119,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         db = new DataHelper(context);
         fetchTranslations();
 
-//        db.removeAllRecents();
-//        db.removeAllFavourites();
+//        db.ClearAll();
 
         setContentView(R.layout.activity_main);
         _translateButton = findViewById(R.id.btnTranslate);

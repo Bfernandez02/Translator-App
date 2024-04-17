@@ -69,12 +69,15 @@ public class Favourites extends AppCompatActivity implements RecyclerViewInterfa
     }
 
     public void handleSettingsClick(View view) {
-//        mStartForResult.launch(new Intent(this, Settings.class));
+        Intent intent = new Intent();
+        setResult(3, intent);
+        finish();
     }
 
     public void handleRecentClick(View view) {
-        Intent i = new Intent(getBaseContext(), Recents.class);
-        startActivity(i);
+        Intent intent = new Intent();
+        setResult(2, intent);
+        finish();
     }
 
     public void handleFavouritesClick(View view) {

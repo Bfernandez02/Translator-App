@@ -73,13 +73,17 @@ public class Recents extends AppCompatActivity implements RecyclerViewInterface 
 
 
     public void handleSettingsClick(View view) {
+        Intent intent = new Intent();
+        setResult(3, intent);
+        finish();
     }
 
     public void handleRecentClick(View view) {
     }
 
     public void handleFavouritesClick(View view) {
-        Intent i = new Intent(getBaseContext(), Favourites.class);
-        startActivity(i);
+        Intent intent = new Intent();
+        setResult(1, intent);
+        finish();
     }
 }
