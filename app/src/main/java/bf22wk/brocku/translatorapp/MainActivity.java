@@ -79,7 +79,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     handleRecentClick(v);
                 }
                 else if (result.getResultCode() == 3){
-                    handleFavouritesClick(v);
+                    handleSettingsClick(v);
                 }
             });
 
@@ -115,10 +115,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        // Fetch all saved translations from database
         context = this;
         db = new DataHelper(context);
         fetchTranslations();
 
+        // Initiate widgets
         setContentView(R.layout.activity_main);
         _translateButton = findViewById(R.id.btnTranslate);
         _inputField = findViewById(R.id.inputField);
@@ -137,6 +139,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         new LoadLanguagesTask().execute(); //load languages into spinner
 
+        // Text to speech function
         _tts = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
             @Override
             public void onInit(int status) {
@@ -153,6 +156,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //listener for from language spinner
         _fromLanguageSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
+            // updates spinner when clicked
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                 UpdateFromLanguage();
             }
@@ -182,10 +186,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (v.getId() == R.id.btnSpeaker) OnSpeakerButtonPressed();
     }
 
+    // Runs the translation function using the API
     private void OnTranslationButtonPressed(){
         new TranslateTask().execute(GetInputText(), _toLanguageCode);
     }
 
+    // Translates using google cloud translation api
     private class TranslateTask extends AsyncTask<String, Void, String> {
 
         @Override
@@ -207,6 +213,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    // Function used to populate language options based on API's supported languages
     private class LoadLanguagesTask extends AsyncTask<Void, Void, List<String>> {
 
         @Override
@@ -258,6 +265,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         fromLanguageName = detection.getLanguage().toString();
         _fromLanguageCode = FindLanguageCode(fromLanguageName);
 
+        // Performs translation
         Translation translation = _translate.translate(
                 text,
                 TranslateOption.sourceLanguage(detectionLanguage),
@@ -278,13 +286,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         return translatedText;
     }
 
+    // Updates spinner and displayed from language
     private void UpdateFromLanguage(){
         String languageText = _fromLanguageSpinner.getSelectedItem().toString();
         _fromLanguageText.setText(languageText.toString());
         _fromLanguageCode = FindLanguageCode(languageText);
     }
 
-
+    // Updates spinner and displayed to language
     private void UpdateToLanguage(){
         String languageText = _toLanguageSpinner.getSelectedItem().toString();
         _toLanguageText.setText(languageText.toString());
@@ -305,6 +314,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         return false; //otherwise return false
     }
 
+
+    // Saves translation as a recent translation. This is saved for the user
     public void SaveRecent(){
 
         String toLanguage = _toLanguageSpinner.getSelectedItem().toString();
@@ -319,27 +330,32 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    // Fetches saved translations from user
     public void fetchTranslations(){
         recentList = db.FetchRecent();
         favouriteList = db.FetchFavourite();
     }
 
+    // Handles when user clicks on settings
     public void handleSettingsClick(View view) {
       mStartForResult.launch(new Intent(this, Settings.class));
     }
 
+    // Handles when user clicks on recents
     public void handleRecentClick(View view) {
         mStartForResult.launch(new Intent(this, Recents.class));
     }
 
+    // Handles when user clicks on favourites
     public void handleFavouritesClick(View view) {
         mStartForResult.launch(new Intent(this, Favourites.class));
     }
 
-
+    // Handles the switch between languages in the spinners
     public void handleLanguageSwitch(View view) {
         String fromLanguage = _fromLanguageSpinner.getSelectedItem().toString();
 
+        // if detect, do nothing
         if (fromLanguage.equals("Detect")){
             return;
         }
@@ -353,11 +369,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         _toLanguageSpinner.setSelection(toLanguageSpinnerAdapter.getPosition(fromLanguage));
     }
 
+    // Handles when the user clicks on a translation in recents or favourites
     public void handleTranslationListElementClick(){
 
         String toLanguage = selectedTranslation.getTo_language();
         String fromLanguage = selectedTranslation.getFrom_language();
 
+        // populates all widgets
         _fromLanguageText.setText(fromLanguage);
         _toLanguageText.setText(toLanguage);
         _fromLanguageSpinner.setSelection(fromLanguageSpinnerAdapter.getPosition(fromLanguage));

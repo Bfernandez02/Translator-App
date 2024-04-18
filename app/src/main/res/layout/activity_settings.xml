@@ -149,6 +149,7 @@
             android:orientation="vertical"
             android:layout_marginHorizontal="10dp"
             android:id="@+id/recentBTN"
+            android:onClick="handleRecentClick"
             >
 
             <ImageView

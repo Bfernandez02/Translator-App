@@ -15,6 +15,11 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+// Translator APP: Group Members:
+// Brandon Fernandez Ling | bf22wk
+// David Martin | dm20zo
+//Jordan Wallace | jw20kx
+
 public class Favourites extends AppCompatActivity implements RecyclerViewInterface {
 
     RecyclerView favouritesLV;
@@ -28,8 +33,9 @@ public class Favourites extends AppCompatActivity implements RecyclerViewInterfa
         MainActivity.recents = false;
         MainActivity.selectedTranslation = null;
 
+        // Fetches updated list of favourites translations
         db = new DataHelper(this);
-        MainActivity.recentList = db.FetchRecent();
+        MainActivity.favouriteList = db.FetchFavourite();
 
         favouritesLV = findViewById(R.id.favouritesLV);
         TranslationListAdapter translationListAdapter = new TranslationListAdapter(
@@ -46,11 +52,13 @@ public class Favourites extends AppCompatActivity implements RecyclerViewInterfa
         });
     }
 
+    // Back to the main class
     public void goBack(View view) {
         Intent i = new Intent(getBaseContext(), MainActivity.class);
         startActivity(i);
     }
 
+    // Handles when an item is clicked
     @Override
     public void onItemClick(int position) {
         Intent intent = new Intent();
@@ -58,6 +66,7 @@ public class Favourites extends AppCompatActivity implements RecyclerViewInterfa
         finish();
     }
 
+    // Handles when user unfavourites a translation
     @Override
     public void onItemClickFavourite(int position) {
         TranslationListAdapter translationListAdapter = new TranslationListAdapter(

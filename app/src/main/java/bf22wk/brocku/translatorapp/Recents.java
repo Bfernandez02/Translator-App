@@ -32,8 +32,10 @@ public class Recents extends AppCompatActivity implements RecyclerViewInterface 
         MainActivity.recents = true;
         db = new DataHelper(this);
 
+        // Fetches updated list of recent translations
         MainActivity.recentList = db.FetchRecent();
 
+        // Populates recycler view based on the list of recents
         TranslationListAdapter translationListAdapter = new TranslationListAdapter(
                 getApplicationContext(), MainActivity.recentList,
                 this);
@@ -49,11 +51,13 @@ public class Recents extends AppCompatActivity implements RecyclerViewInterface 
         });
     }
 
+    // Back to the main class
     public void goBack(View view) {
         Intent i = new Intent(getBaseContext(), MainActivity.class);
         startActivity(i);
     }
 
+    // Handles when an item is clicked
     @Override
     public void onItemClick(int position) {
         Intent intent = new Intent();
@@ -61,6 +65,7 @@ public class Recents extends AppCompatActivity implements RecyclerViewInterface 
         finish();
     }
 
+    // Handles when user favourites a translation
     @Override
     public void onItemClickFavourite(int position) {
         TranslationListAdapter translationListAdapter = new TranslationListAdapter(
@@ -70,7 +75,6 @@ public class Recents extends AppCompatActivity implements RecyclerViewInterface 
         recentLV.setAdapter(translationListAdapter);
         recentLV.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
     }
-
 
     public void handleSettingsClick(View view) {
         Intent intent = new Intent();

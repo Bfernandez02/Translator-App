@@ -1,5 +1,6 @@
 package bf22wk.brocku.translatorapp;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
@@ -61,5 +62,20 @@ public class Settings extends AppCompatActivity {
                     finish();
                 })
                 .setNegativeButton("Cancel", (dialog, which) -> dialog.cancel()).show();
+    }
+
+    public void handleSettingsClick(View view) {
+    }
+
+    public void handleRecentClick(View view) {
+        Intent intent = new Intent();
+        setResult(2, intent);
+        finish();
+    }
+
+    public void handleFavouritesClick(View view) {
+        Intent intent = new Intent();
+        setResult(1, intent);
+        finish();
     }
 }
