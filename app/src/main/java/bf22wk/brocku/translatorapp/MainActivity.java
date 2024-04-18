@@ -119,8 +119,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         db = new DataHelper(context);
         fetchTranslations();
 
-//        db.ClearAll();
-
         setContentView(R.layout.activity_main);
         _translateButton = findViewById(R.id.btnTranslate);
         _inputField = findViewById(R.id.inputField);
@@ -327,7 +325,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public void handleSettingsClick(View view) {
-//        mStartForResult.launch(new Intent(this, Settings.class));
+      mStartForResult.launch(new Intent(this, Settings.class));
     }
 
     public void handleRecentClick(View view) {

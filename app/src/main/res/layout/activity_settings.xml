@@ -34,6 +34,66 @@
             android:layout_marginStart="12dp"/>
     </LinearLayout>
 
+    <!-- Button Options -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingVertical="2dp"
+        android:gravity="center_horizontal"
+        >
+
+        <!-- Clear All Favourites Button -->
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/clearRecentsBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/clear_all_recents"
+            android:textColor="@color/white"
+            android:background="@drawable/back_dark"
+            android:paddingStart="24dp"
+            android:paddingEnd="24dp"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp"
+            android:textSize="20sp"
+            android:layout_marginBottom="1dp"
+            android:onClick="clearAllRecents" />
+
+        <!-- Clear All Recents Button -->
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/clearFavouritesBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/clear_all_favourites"
+            android:textColor="@color/white"
+            android:background="@drawable/back_dark"
+            android:paddingStart="24dp"
+            android:paddingEnd="24dp"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp"
+            android:textSize="20sp"
+            android:layout_marginBottom="1dp"
+            android:onClick="clearAllFavourites" />
+
+        <!-- Clear All Translations Button -->
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/clearTranslationsBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/clear_all_translations"
+            android:textColor="@color/white"
+            android:background="@drawable/back_dark"
+            android:paddingStart="24dp"
+            android:paddingEnd="24dp"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp"
+            android:textSize="20sp"
+            android:onClick="clearAllTranslations" />
+
+    </LinearLayout>
+
+
+
     <Space
         android:layout_width="0dp"
         android:layout_height="0dp"

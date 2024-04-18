@@ -13,4 +13,7 @@
     <string name="favourites">Favourites</string>
     <string name="recent">Recent</string>
     <string name="settings">Settings</string>
+    <string name="clear_all_recents">Clear all Recents</string>
+    <string name="clear_all_favourites">Clear All Favourites</string>
+    <string name="clear_all_translations">Clear All Translations</string>
 </resources>
