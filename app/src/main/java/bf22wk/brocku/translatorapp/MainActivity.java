@@ -86,7 +86,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private static final int SPEECH_REQUEST_CODE = 100;
     Context context;
-    Translate _translate = TranslateOptions.newBuilder().setApiKey("AIzaSyAmjYp_KwOm9-gLDSGKUCmJ_xLraz6te8k").build().getService();
+    Translate _translate = TranslateOptions.newBuilder().setApiKey("secret").build().getService();
     ImageView _micButton, _speakerButton;
     Button _translateButton;
     TextInputEditText _inputField; //input box
